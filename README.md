@@ -131,5 +131,3 @@ These tests mirror how configuration systems are validated in production, using 
 ## 📬 Contact
 
 Maintained by [Alexis Rodriguez](https://github.com/AlexisRodriguezCS)
-
----
