@@ -102,13 +102,6 @@ These tests mirror how configuration systems are validated in production, using 
 
 ---
 
-## 📌 Notes
-
-- Exposes config at: `http://localhost:8888/{application}/{profile}`
-- Used by all services via `spring.config.import: configserver:` property
-
----
-
 ## 🧱 Related Services
 
 - Infrastructure & Core Services
