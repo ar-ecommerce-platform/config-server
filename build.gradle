@@ -39,3 +39,7 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+bootJar {
+	archiveFileName = 'config-server.jar'
+}
