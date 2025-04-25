@@ -1,4 +1,4 @@
-# Config Server - E-commerce Backend
+# 🛠️ Config Server – E-commerce Backend
 
 Centralized configuration service for all microservices in the E-commerce backend. Fetches and distributes configuration properties from a remote Git repository.
 
