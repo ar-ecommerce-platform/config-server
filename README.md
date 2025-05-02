@@ -2,8 +2,6 @@
 
 Centralized configuration service for all microservices in the E-commerce backend. Fetches and distributes configuration properties from a remote Git repository.
 
-> ⚠️ **Work In Progress** — Config profiles and environments will evolve with service growth.
-
 ---
 
 ## 🔧 Tech Stack
@@ -66,7 +64,7 @@ config-server/
 │   │   ├── java/com/example/configserver/
 │   │   │   └── ConfigServerApp.java
 │   └── resources/
-│       └── application.yml  # Points to Git repo for config
+│       └── bootstrap.yml  # Configures the server to load settings from a Git repo
 ├── build.gradle
 └── Dockerfile
 ```
