@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: config-server
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/your-org/ecommerce-config-repo.git
+          clone-on-start: true
+          search-paths:
+            - '*-service'
+          refresh-rate: 0
+        default-label: main
+      fail-fast: true
+
+  profiles:
+    active: git
+
+server:
+  port: 8888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
