@@ -25,10 +25,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-config-server'
+
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'io.rest-assured:rest-assured:5.4.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
 
 dependencyManagement {
 	imports {

@@ -1,5 +1,7 @@
 # 🛠️ Config Server – E-commerce Backend
 
+[![Test Report](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/test-report.yml/badge.svg)](https://alexisrodriguezcs.github.io/ecommerce-config-server/test-report/)
+
 Centralized configuration service for all microservices in the E-commerce backend. Fetches and distributes configuration properties from a remote Git repository.
 
 ---
@@ -36,7 +38,9 @@ The Config Server reads configuration files from a centralized Git repository an
 
 All services are configured to use this server via:
 ```yaml
-spring.config.import: configserver:
+spring:
+  config:
+    import: configserver:http://localhost:8888
 ```
 
 ---
@@ -49,7 +53,7 @@ spring:
   application:
     name: inventory-service-dev   # This must match the config file name in the config repo
 config:
-  import: configserver:     # Tells Spring to fetch config from the Config Server
+  import: configserver:http://localhost:8888    # Tells Spring to fetch config from the Config Server
 ```
 📝 Make sure your Config Server is running and points to the correct Git repo!
 
@@ -61,12 +65,18 @@ config:
 config-server/
 ├── src/
 │   ├── main/
-│   │   ├── java/com/example/configserver/
-│   │   │   └── ConfigServerApp.java
+│   │   └── java/com/ecommerce/configserver/
+│   │       └── ConfigServerApp.java
+│   ├── test/
+│   │   └── java/com/ecommerce/ecommerce_config_server/integration/
+│   │       └── ConfigServerIntegrationTest.java
 │   └── resources/
 │       └── bootstrap.yml  # Configures the server to load settings from a Git repo
 ├── build.gradle
-└── Dockerfile
+├── Dockerfile
+├── .github/
+│   └── workflows/
+│       └── test-report.yml
 ```
 
 ---
