@@ -89,4 +89,17 @@ public class ConfigServerIntegrationTest {
                 .body("name", equalTo("nonexistent-service"))
                 .body("propertySources.name", everyItem(containsString("application.yml")));
     }
+
+    /**
+     * 🚦 Smoke test to ensure the config server is operational and healthy.
+     */
+    @Test
+    void shouldReportHealthyStatus() {
+        given()
+                .when()
+                .get("/actuator/health")
+                .then()
+                .statusCode(200)
+                .body("status", equalTo("UP"));
+    }
 }
