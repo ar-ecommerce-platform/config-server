@@ -1,6 +1,6 @@
 # 🛠️ Config Server – E-commerce Backend
 
-[![Test Report](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/test-report.yml/badge.svg)](https://alexisrodriguezcs.github.io/ecommerce-config-server/test-report/)
+[![Run Integration Tests and Publish Report](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/test.yml/badge.svg)](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/test.yml)
 
 Centralized configuration service for all microservices in the E-commerce backend. Fetches and distributes configuration properties from a remote Git repository.
 
