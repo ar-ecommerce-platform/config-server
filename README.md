@@ -101,14 +101,27 @@ spring:
 
 ## 🧪 Testing Strategy
 
-The config server is tested to ensure reliable startup and integration with the remote Git repository. The testing process includes:
+To ensure the `ecommerce-config-server` behaves reliably in real-world environments, the testing strategy focuses on **integration and smoke testing** techniques used in production systems.
 
-- ✅ **Startup Check** – Verifies that the server boots successfully and connects to the Git repo.
-- 🔍 **Config Fetching** – Confirms that services can retrieve the correct configuration using endpoints like `/{application}/{profile}`.
-- 🧪 **Profile Resolution** – Ensures environment-specific configs (e.g., `dev`, `prod`) are loaded properly.
-- 🔄 **Reload Verification** *(if using Spring Cloud Bus)* – Optionally tests that config changes in Git trigger updates in client services.
+### ✅ What We're Testing
+- **Service Boot & Health** – Verifies the config server starts up and reports healthy status.
+- **Git Integration** – Confirms that configs are pulled correctly from the remote Git repository.
+- **Profile-Specific Resolution** – Checks that services receive the correct environment configs (e.g., `dev`, `prod`).
+- **Fallback Behavior** – Ensures graceful responses for unknown profiles or services using global defaults.
 
-These tests mirror how configuration systems are validated in production, using integration and smoke testing techniques.
+### 🧠 Why This Matters
+In production, configuration servers are a critical part of system startup. If they fail, services may boot with incorrect or missing properties. These tests simulate realistic interactions and edge cases to guarantee stability under normal and degraded conditions.
+
+### ⚙️ How It's Done
+- Uses **Testcontainers** to spin up a real Docker container of the config server.
+- Sends real HTTP requests (via RestAssured) to endpoints like `/auth-service/dev`.
+- Validates:
+  - That correct YAML files are resolved and merged.
+  - That the `/actuator/health` endpoint reports `UP` (smoke test).
+  - That default and global fallbacks are applied as expected.
+
+These tests reflect real-world production validation using Testcontainers-based integration testing, covering config merging, profile resolution, fallback behavior, and smoke testing.
+
 
 ---
 
