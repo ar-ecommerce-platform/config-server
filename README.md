@@ -136,6 +136,7 @@ These tests reflect real-world production validation using Testcontainers-based 
 
 - Microservices
   - [ecommerce-auth-service](https://github.com/AlexisRodriguezCS/ecommerce-auth-service) — User authentication and JWT management
+  - [ecommerce-user-service](https://github.com/AlexisRodriguezCS/ecommerce-user-service) — User profile management and account details
   - [ecommerce-product-service](https://github.com/AlexisRodriguezCS/ecommerce-product-service) — Product catalog creation, updates, and search
   - [ecommerce-inventory-service](https://github.com/AlexisRodriguezCS/ecommerce-inventory-service) — Inventory tracking and stock adjustments
   - [ecommerce-order-service](https://github.com/AlexisRodriguezCS/ecommerce-order-service) — Order processing and checkout workflows

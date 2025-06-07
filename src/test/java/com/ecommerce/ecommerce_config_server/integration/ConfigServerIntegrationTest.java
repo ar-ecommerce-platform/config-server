@@ -26,7 +26,7 @@ public class ConfigServerIntegrationTest {
 
     @BeforeAll
     static void setUp() {
-        // Configure RestAssured to hit the running container
+        // Set RestAssured's base URI to the config-server running inside the Docker container
         RestAssured.baseURI = "http://" + configServer.getHost() + ":" + configServer.getMappedPort(8888);
     }
 
