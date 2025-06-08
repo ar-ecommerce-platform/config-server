@@ -19,8 +19,10 @@ import static org.hamcrest.Matchers.*;
 @Testcontainers
 public class ConfigServerIntegrationTest {
 
+    static final String IMAGE_TAG = System.getenv().getOrDefault("IMAGE_TAG", "latest");
+
     @Container
-    static GenericContainer<?> configServer = new GenericContainer<>("ecommerce-config-server:latest")
+    static GenericContainer<?> configServer = new GenericContainer<>("ghcr.io/alexisrodriguezcs/ecommerce-config-server:" + IMAGE_TAG)
             .withExposedPorts(8888)
             .waitingFor(Wait.forHttp("/actuator/health").forStatusCode(200));
 

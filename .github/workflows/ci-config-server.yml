@@ -47,6 +47,9 @@ jobs:
           echo "sha_tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT
           echo "latest_tag=latest" >> $GITHUB_OUTPUT
 
+      - name: Export IMAGE_TAG as env variable for testcontainers
+        run: echo "IMAGE_TAG=${{ steps.meta.outputs.sha_tag }}" >> $GITHUB_ENV
+
       - name: Build docker image
         run: |
           docker build -t ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.sha_tag }} \
