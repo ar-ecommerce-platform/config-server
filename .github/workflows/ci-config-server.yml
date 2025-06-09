@@ -50,7 +50,7 @@ jobs:
       - name: Export IMAGE_TAG as env variable for testcontainers
         run: echo "IMAGE_TAG=${{ steps.meta.outputs.sha_tag }}" >> $GITHUB_ENV
 
-      - name: Build docker image
+      - name: Build docker image for testing
         run: |
           docker build -t ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.sha_tag }} \
                        -t ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.latest_tag }} .
@@ -90,6 +90,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docker image for GHCR
+        run: |
+          docker build -t $IMAGE_NAME:$SHA_TAG \
+                       -t $IMAGE_NAME:$LATEST_TAG .
 
       - name: Push Docker image to GHCR
         run: |
