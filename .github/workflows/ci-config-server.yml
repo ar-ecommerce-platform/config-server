@@ -55,6 +55,17 @@ jobs:
           docker build -t ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.sha_tag }} \
                        -t ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.latest_tag }} .
 
+      - name: Save docker image
+        run: |
+          mkdir -p docker-image
+          docker save -o docker-image/image.tar ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.sha_tag }}
+
+      - name: Upload image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: docker-image/image.tar
+
       - name: Run tests
         run: ./gradlew test
 
@@ -91,10 +102,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build docker image for GHCR
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+          path: ./docker-image
+
+      - name: Load docker image
         run: |
-          docker build -t $IMAGE_NAME:$SHA_TAG \
-                       -t $IMAGE_NAME:$LATEST_TAG .
+          IMAGE_NAME=${{ needs.build-and-test.outputs.image_name }}
+          SHA_TAG=${{ needs.build-and-test.outputs.sha_tag }}
+          LATEST_TAG=${{ needs.build-and-test.outputs.latest_tag }}
+          
+          docker load -i ./docker-image/image.tar
 
       - name: Push Docker image to GHCR
         run: |
@@ -107,3 +127,6 @@ jobs:
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             docker push $IMAGE_NAME:$LATEST_TAG
           fi
+
+      - name: Clean up local docker image tar
+        run: rm -rf docker-image
