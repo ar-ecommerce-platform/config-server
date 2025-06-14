@@ -19,14 +19,16 @@ import static org.hamcrest.Matchers.*;
 @Testcontainers
 public class ConfigServerIntegrationTest {
 
+    static final String IMAGE_TAG = System.getenv().getOrDefault("IMAGE_TAG", "latest");
+
     @Container
-    static GenericContainer<?> configServer = new GenericContainer<>("ecommerce-config-server:latest")
+    static GenericContainer<?> configServer = new GenericContainer<>("ghcr.io/alexisrodriguezcs/ecommerce-config-server:" + IMAGE_TAG)
             .withExposedPorts(8888)
             .waitingFor(Wait.forHttp("/actuator/health").forStatusCode(200));
 
     @BeforeAll
     static void setUp() {
-        // Configure RestAssured to hit the running container
+        // Set RestAssured's base URI to the config-server running inside the Docker container
         RestAssured.baseURI = "http://" + configServer.getHost() + ":" + configServer.getMappedPort(8888);
     }
 
