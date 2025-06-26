@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci:
-    uses: alexisrodriguezcs/infra/.github/workflows/ci-template.yml@main
+    uses: alexisrodriguezcs/ecommerce-infra/.github/workflows/ci-template.yml@main
     with:
       service_name: config-server
       docker_image_name: ghcr.io/alexisrodriguezcs/ecommerce-config-server
