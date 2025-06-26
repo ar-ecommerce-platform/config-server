@@ -1,9 +1,5 @@
 # 🛠️ Config Server – E-commerce Backend
 
-
-
-[//]: # ([![Run Integration Tests and Publish Report]&#40;https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/test.yml/badge.svg&#41;]&#40;https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/test.yml&#41; [![View Test Report]&#40;https://img.shields.io/badge/Test_Report-Live-blue?style=flat-square&#41;]&#40;https://alexisrodriguezcs.github.io/ecommerce-config-server/test-report/&#41;)
-
 [![CI Status](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/ci.yml)
 [![View Test Report](https://img.shields.io/badge/Test_Report-Live-blue?style=flat-square)](https://alexisrodriguezcs.github.io/test-repo/config-server/test/)
 [![View Coverage Report](https://img.shields.io/badge/Coverage_Report-Live-green?style=flat-square)](https://alexisrodriguezcs.github.io/test-repo/config-server/coverage/)
