@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'jacoco'
+	id "org.owasp.dependencycheck" version "12.1.3"
 }
 
 group = 'com.ecommerce'
@@ -44,6 +45,11 @@ dependencyManagement {
 	}
 }
 
+dependencyCheck {
+	formats = ['html', 'json']
+	failBuildOnCVSS = 7 // Fail the build if any dependency has a CVSS score of 7 or higher
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 	finalizedBy(tasks.jacocoTestReport)
@@ -51,7 +57,7 @@ tasks.named('test') {
 
 
 jacoco {
-	toolVersion = "0.8.10" // optional: specify Jacoco version
+	toolVersion = "0.8.13"
 }
 
 tasks.jacocoTestReport {
@@ -59,6 +65,33 @@ tasks.jacocoTestReport {
 		xml.required.set(true)
 		csv.required.set(false)
 		html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
+	}
+}
+
+tasks.jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'CLASS'
+			excludes = [
+					'com.ecommerce.Application',
+					'com.ecommerce.config.*',
+					'com.ecommerce.dto.*'
+			]
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+		}
+
+		rule {
+			element = 'BUNDLE'
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.70 
+			}
+		}
 	}
 }
 
