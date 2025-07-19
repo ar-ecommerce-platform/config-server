@@ -1,8 +1,9 @@
 # 🛠️ Config Server – E-commerce Backend
 
-
-
-[![Run Integration Tests and Publish Report](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/test.yml/badge.svg)](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/test.yml) [![View Test Report](https://img.shields.io/badge/Test_Report-Live-blue?style=flat-square)](https://alexisrodriguezcs.github.io/ecommerce-config-server/test-report/)
+[![CI Status](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/ci.yml)
+[![View Test Report](https://img.shields.io/badge/Test_Report-Live-blue?style=flat-square)](https://alexisrodriguezcs.github.io/test-repo/config-server/test/)
+[![View Coverage Report](https://img.shields.io/badge/Coverage_Report-Live-green?style=flat-square)](https://alexisrodriguezcs.github.io/test-repo/config-server/coverage/)
+[![View Security Report](https://img.shields.io/badge/Security_Report-Live-red?style=flat-square)](https://alexisrodriguezcs.github.io/test-repo/config-server/security/)
 
 Centralized configuration service for all microservices in the E-commerce backend. Fetches and distributes configuration properties from a remote Git repository.
 
@@ -127,14 +128,15 @@ These tests reflect real-world production validation using Testcontainers-based 
 
 ## 🧱 Related Services
 
-- Infrastructure & Core Services
+- **Infrastructure & Core Services**
   - [ecommerce-infra](https://github.com/AlexisRodriguezCS/ecommerce-infra) — Infrastructure setup with Docker, CI/CD, ELK logging, Postman, and documentation
   - [ecommerce-config-repo](https://github.com/AlexisRodriguezCS/ecommerce-config-repo) — Git repo for configs
   - [ecommerce-config-server](https://github.com/AlexisRodriguezCS/ecommerce-config-server) — Centralized configuration service (this repo)
   - [ecommerce-discovery-server](https://github.com/AlexisRodriguezCS/ecommerce-discovery-server) — Eureka-based service registry
   - [ecommerce-api-gateway](https://github.com/AlexisRodriguezCS/ecommerce-api-gateway) — API gateway with routing, JWT validation, and rate limiting
+  - [ecommerce-test-reports](https://github.com/AlexisRodriguezCS/ecommerce-test-reports) — GitHub Pages for test, coverage, and security reports per service
 
-- Microservices
+- **Microservices**
   - [ecommerce-auth-service](https://github.com/AlexisRodriguezCS/ecommerce-auth-service) — User authentication and JWT management
   - [ecommerce-user-service](https://github.com/AlexisRodriguezCS/ecommerce-user-service) — User profile management and account details
   - [ecommerce-product-service](https://github.com/AlexisRodriguezCS/ecommerce-product-service) — Product catalog creation, updates, and search
@@ -142,7 +144,6 @@ These tests reflect real-world production validation using Testcontainers-based 
   - [ecommerce-order-service](https://github.com/AlexisRodriguezCS/ecommerce-order-service) — Order processing and checkout workflows
   - [ecommerce-payment-service](https://github.com/AlexisRodriguezCS/ecommerce-payment-service) — Secure payment processing
   - [ecommerce-notification-service](https://github.com/AlexisRodriguezCS/ecommerce-notification-service) — Email and SMS notifications for order events
-  
 ---
 
 ## 📬 Contact
