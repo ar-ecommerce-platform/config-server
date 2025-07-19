@@ -1,7 +1,9 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.4'
+	id 'org.springframework.boot' version '3.5.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
+	id "org.owasp.dependencycheck" version "12.1.3"
 }
 
 group = 'com.ecommerce'
@@ -18,24 +20,55 @@ repositories {
 }
 
 ext {
-	set('springCloudVersion', "2024.0.1")
+	set('springCloudVersion', '2025.0.0')
+}
+
+sourceSets {
+	integrationTest {
+		java.srcDir file('src/integrationTest/java')
+		resources.srcDir file('src/integrationTest/resources')
+		compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+		runtimeClasspath += output + compileClasspath
+	}
 }
 
 dependencies {
+	// Application dependencies
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-config-server'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+	// Unit test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:testcontainers'
 	testImplementation 'io.rest-assured:rest-assured:5.4.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Integration test dependencies
+	integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+	integrationTestImplementation 'org.testcontainers:junit-jupiter'
+	integrationTestImplementation  'org.springframework.boot:spring-boot-starter-webflux'
 }
 
+configurations.configureEach {
+	resolutionStrategy {
+		// ✅ Temporary security override for CVE-2020-36843 (eddsa < 0.3.1)
+		// TODO: Remove once spring-cloud-config-server upgrades eddsa to ≥ 0.3.1
+		force 'net.i2p.crypto:eddsa:0.3.1'
+
+		// ✅ Temporary security override for CVE-2025-4949 (JGit < 7.2.1)
+		// TODO: Remove once spring-cloud-config-server no longer brings in vulnerable JGit (< 7.2.1)
+		eachDependency { details ->
+			if (details.requested.group == 'org.eclipse.jgit') {
+				details.useVersion '7.2.1.202505142326-r'
+			}
+		}
+	}
+}
 
 dependencyManagement {
 	imports {
@@ -43,8 +76,92 @@ dependencyManagement {
 	}
 }
 
+dependencyCheck {
+	formats = ['html', 'json']
+	failBuildOnCVSS = 7 // Fail the build if any dependency has a CVSS score of 7 or higher
+}
+
 tasks.named('test') {
+	description = "Runs unit tests"
+	testClassesDirs = sourceSets.test.output.classesDirs
+	classpath = sourceSets.test.runtimeClasspath
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+
+	reports {
+		html.required.set(true)
+		html.outputLocation.set(layout.buildDirectory.dir("reports/tests/unitTest"))
+	}
+
+	jacoco {
+		destinationFile = layout.buildDirectory.file("jacoco/test.exec").get().asFile
+	}
+}
+
+tasks.register("integrationTest", Test) {
+	description = "Runs integration tests"
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+	useJUnitPlatform()
+
+	reports {
+		html.required.set(true)
+		html.outputLocation.set(layout.buildDirectory.dir("reports/tests/integrationTest"))
+	}
+
+	jacoco {
+		destinationFile = layout.buildDirectory.file("jacoco/integrationTest.exec").get().asFile
+	}
+}
+
+tasks.integrationTest {
+	dependsOn bootJar
+}
+
+tasks.jacocoTestReport {
+	dependsOn test, integrationTest
+
+	executionData(
+			layout.buildDirectory.file("jacoco/test.exec").get().asFile,
+			layout.buildDirectory.file("jacoco/integrationTest.exec").get().asFile
+	)
+
+	reports {
+		html.required.set(true)
+		xml.required.set(true)
+		html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.13"
+}
+
+tasks.jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'CLASS'
+			excludes = [
+					'com.ecommerce.Application',
+					'com.ecommerce.config.*',
+					'com.ecommerce.dto.*'
+			]
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+		}
+
+		rule {
+			element = 'BUNDLE'
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.70
+			}
+		}
+	}
 }
 
 bootJar {

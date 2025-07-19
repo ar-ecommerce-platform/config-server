@@ -1,4 +1,4 @@
-name: CI for Config Server
+name: Config Server CI
 
 on:
   push:
@@ -8,9 +8,13 @@ on:
 
 jobs:
   ci:
-    uses: alexisrodriguezcs/infra/.github/workflows/reusable-ci.yml@main
+    uses: alexisrodriguezcs/ecommerce-infra/.github/workflows/ci-template.yml@main
     with:
       service_name: config-server
-      docker_image_name: ghcr.io/alexisrodriguezcs/ecommerce-config-server
+      sonar_organization: ar-ecommerce-platform
+      enable_config_server: false
     secrets:
       REPORTS_TRIGGER_TOKEN: ${{ secrets.REPORTS_TRIGGER_TOKEN }}
+      OWASP_API_KEY: ${{ secrets.OWASP_API_KEY }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

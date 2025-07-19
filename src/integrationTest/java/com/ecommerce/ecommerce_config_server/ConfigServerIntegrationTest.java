@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerce_config_server.integration;
+package com.ecommerce.ecommerce_config_server;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,6 +8,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import io.restassured.RestAssured;
+import org.testcontainers.utility.DockerImageName;
+
+import java.util.Optional;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
@@ -19,10 +22,16 @@ import static org.hamcrest.Matchers.*;
 @Testcontainers
 public class ConfigServerIntegrationTest {
 
-    static final String IMAGE_TAG = System.getenv().getOrDefault("IMAGE_TAG", "latest");
+    private static final String IMAGE_ENV_VAR = "SERVICE_IMAGE";
 
+    private static final DockerImageName IMAGE_NAME = DockerImageName.parse(
+            Optional.ofNullable(System.getenv(IMAGE_ENV_VAR))
+                    .orElseThrow(() -> new IllegalStateException(IMAGE_ENV_VAR + " env var must be set for integration tests"))
+    );
+
+    @SuppressWarnings("resource")
     @Container
-    static GenericContainer<?> configServer = new GenericContainer<>("ghcr.io/alexisrodriguezcs/ecommerce-config-server:" + IMAGE_TAG)
+    static GenericContainer<?> configServer = new GenericContainer<>(IMAGE_NAME)
             .withExposedPorts(8888)
             .waitingFor(Wait.forHttp("/actuator/health").forStatusCode(200));
 
@@ -33,7 +42,7 @@ public class ConfigServerIntegrationTest {
     }
 
     /**
-     * ✅ Validates that default config loads correctly for auth-service.
+     * 🧪 Validates that default config loads correctly for auth-service.
      */
     @Test
     void shouldReturnAuthServiceDefaultConfig() {
@@ -79,7 +88,7 @@ public class ConfigServerIntegrationTest {
     }
 
     /**
-     * ✅ Confirms global config is served for unknown services.
+     * 🧪 Confirms global config is served for unknown services.
      */
     @Test
     void shouldReturnGlobalConfigForUnknownService() {
