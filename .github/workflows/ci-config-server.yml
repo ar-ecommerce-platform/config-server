@@ -7,12 +7,11 @@ on:
     branches: [main, develop]
 
 jobs:
-  ci:
-    uses: alexisrodriguezcs/ecommerce-infra/.github/workflows/ci-template.yml@main
+  call-reusable-ci:
+    uses: ar-ecommerce-platform/ci-workflows/.github/workflows/ci-template.yml@main
     with:
-      service_name: config-server
-      sonar_organization: ar-ecommerce-platform
-      enable_config_server: false
+      run_integration_test: false
+      run_release: ${{ github.ref == 'refs/heads/main' }}
     secrets:
       REPORTS_TRIGGER_TOKEN: ${{ secrets.REPORTS_TRIGGER_TOKEN }}
       OWASP_API_KEY: ${{ secrets.OWASP_API_KEY }}
