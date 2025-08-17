@@ -6,7 +6,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/AlexisRodriguezCS/ecommerce-config-repo.git
+          uri: https://github.com/ar-ecommerce-platform/config-repo.git
           clone-on-start: true
           search-paths:
             - 'auth-service'

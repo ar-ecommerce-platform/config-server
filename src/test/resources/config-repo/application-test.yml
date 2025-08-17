@@ -1,0 +1,8 @@
+spring:
+  profiles: test
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:src/test/resources/config-repo
