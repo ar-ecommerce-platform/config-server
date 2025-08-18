@@ -1,9 +1,10 @@
 # 🛠️ Config Server – E-commerce Backend
 
-[![CI Status](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexisRodriguezCS/ecommerce-config-server/actions/workflows/ci.yml)
-[![View Test Report](https://img.shields.io/badge/Test_Report-Live-blue?style=flat-square)](https://alexisrodriguezcs.github.io/test-repo/config-server/test/)
-[![View Coverage Report](https://img.shields.io/badge/Coverage_Report-Live-green?style=flat-square)](https://alexisrodriguezcs.github.io/test-repo/config-server/coverage/)
-[![View Security Report](https://img.shields.io/badge/Security_Report-Live-red?style=flat-square)](https://alexisrodriguezcs.github.io/test-repo/config-server/security/)
+[![CI Status](https://github.com/ar-ecommerce-platform/config-server/actions/workflows/ci-config-server.yml/badge.svg)](https://github.com/ar-ecommerce-platform/config-server/actions/workflows/ci-config-server.yml)
+[![View Test Report](https://img.shields.io/badge/Test_Report-Live-blue?style=flat-square)](https://ar-ecommerce-platform.github.io/test-repo/config-server/test/)
+[![View Coverage Report](https://img.shields.io/badge/Coverage_Report-Live-green?style=flat-square)](https://ar-ecommerce-platform.github.io/test-repo/config-server/coverage/)
+[![View Security Report](https://img.shields.io/badge/Security_Report-Live-red?style=flat-square)](https://ar-ecommerce-platform.github.io/test-repo/config-server/security/)
+
 
 Centralized configuration service for all microservices in the E-commerce backend. Fetches and distributes configuration properties from a remote Git repository.
 
@@ -33,8 +34,7 @@ Centralized configuration service for all microservices in the E-commerce backen
 
 The Config Server reads configuration files from a centralized Git repository and exposes them to all microservices at runtime. This allows consistent configuration management across environments.
 
-📁 Config Repository:  
-[ecommerce-config-repo](https://github.com/AlexisRodriguezCS/ecommerce-config-repo)
+📁 Config Repository: https://github.com/ar-ecommerce-platform/config-repo
 
 🔗 Config access URL pattern:  
 `http://localhost:8888/{application}/{profile}`
@@ -68,18 +68,26 @@ config:
 config-server/
 ├── src/
 │   ├── main/
-│   │   └── java/com/ecommerce/configserver/
-│   │       └── ConfigServerApp.java
-│   ├── test/
-│   │   └── java/com/ecommerce/ecommerce_config_server/integration/
-│   │       └── ConfigServerIntegrationTest.java
-│   └── resources/
-│       └── bootstrap.yml  # Configures the server to load settings from a Git repo
+│   │   ├── java/com/ecommerce/ecommerce_config_server/
+│   │   │   └── EcommerceConfigServerApplication.java      # Main Spring Boot app
+│   │   └── resources/
+│   │       ├── application.yml                            # Optional default Spring Boot properties
+│   │       └── bootstrap.yml                              # Config Server bootstrap properties
+│   ├── smoke/
+│   │   └── java/com/ecommerce/ecommerce_config_server/
+│   │       └── ConfigServerSmokeTest.java                # Smoke test for Config Server
+│   └── test/
+│       ├── java/com/ecommerce/ecommerce_config_server/
+│       │   └── EcommerceConfigServerApplicationTests.java  # Unit & context load tests
+│       └── resources/
+│           ├── application-test.yml                       # Test profile config (Spring Boot 3 format)
+│           └── config-repo/
+│               └── application.yml                        # Local test repo content served by Config Server
 ├── build.gradle
 ├── Dockerfile
 ├── .github/
 │   └── workflows/
-│       └── test-report.yml
+│       └── ci-config-server.yml                           # CI workflow for Config Server
 ```
 
 ---
@@ -94,7 +102,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/AlexisRodriguezCS/ecommerce-config-repo
+          uri: https://github.com/ar-ecommerce-platform/config-repo
 ```
 
 ---
@@ -102,7 +110,7 @@ spring:
 
 ## 🧪 Testing Strategy
 
-To ensure the `ecommerce-config-server` behaves reliably in real-world environments, the testing strategy focuses on **integration and smoke testing** techniques used in production systems.
+The `config-server` is validated with **smoke tests** to ensure reliable startup and connectivity.
 
 ### ✅ What We're Testing
 - **Service Boot & Health** – Verifies the config server starts up and reports healthy status.
@@ -120,32 +128,10 @@ In production, configuration servers are a critical part of system startup. If t
   - That correct YAML files are resolved and merged.
   - That the `/actuator/health` endpoint reports `UP` (smoke test).
   - That default and global fallbacks are applied as expected.
-
-These tests reflect real-world production validation using Testcontainers-based integration testing, covering config merging, profile resolution, fallback behavior, and smoke testing.
-
-
 ---
 
-## 🧱 Related Services
+## 🔗 Main Project Page
 
-- **Infrastructure & Core Services**
-  - [ecommerce-infra](https://github.com/AlexisRodriguezCS/ecommerce-infra) — Infrastructure setup with Docker, CI/CD, ELK logging, Postman, and documentation
-  - [ecommerce-config-repo](https://github.com/AlexisRodriguezCS/ecommerce-config-repo) — Git repo for configs
-  - [ecommerce-config-server](https://github.com/AlexisRodriguezCS/ecommerce-config-server) — Centralized configuration service (this repo)
-  - [ecommerce-discovery-server](https://github.com/AlexisRodriguezCS/ecommerce-discovery-server) — Eureka-based service registry
-  - [ecommerce-api-gateway](https://github.com/AlexisRodriguezCS/ecommerce-api-gateway) — API gateway with routing, JWT validation, and rate limiting
-  - [ecommerce-test-reports](https://github.com/AlexisRodriguezCS/ecommerce-test-reports) — GitHub Pages for test, coverage, and security reports per service
+For the main E-commerce backend platform repository and all related projects, visit:
 
-- **Microservices**
-  - [ecommerce-auth-service](https://github.com/AlexisRodriguezCS/ecommerce-auth-service) — User authentication and JWT management
-  - [ecommerce-user-service](https://github.com/AlexisRodriguezCS/ecommerce-user-service) — User profile management and account details
-  - [ecommerce-product-service](https://github.com/AlexisRodriguezCS/ecommerce-product-service) — Product catalog creation, updates, and search
-  - [ecommerce-inventory-service](https://github.com/AlexisRodriguezCS/ecommerce-inventory-service) — Inventory tracking and stock adjustments
-  - [ecommerce-order-service](https://github.com/AlexisRodriguezCS/ecommerce-order-service) — Order processing and checkout workflows
-  - [ecommerce-payment-service](https://github.com/AlexisRodriguezCS/ecommerce-payment-service) — Secure payment processing
-  - [ecommerce-notification-service](https://github.com/AlexisRodriguezCS/ecommerce-notification-service) — Email and SMS notifications for order events
----
-
-## 📬 Contact
-
-Maintained by [Alexis Rodriguez](https://github.com/AlexisRodriguezCS)
+https://github.com/ar-ecommerce-platform
