@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce_config_server;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -10,6 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import io.restassured.RestAssured;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.*;
@@ -20,7 +22,8 @@ import static org.hamcrest.Matchers.*;
  * This test ensures the config server behaves correctly under different config scenarios.
  */
 @Testcontainers
-public class ConfigServerIntegrationTest {
+@Tag("smoke")
+public class ConfigServerSmokeTest {
 
     private static final String IMAGE_ENV_VAR = "SERVICE_IMAGE";
 
@@ -33,7 +36,11 @@ public class ConfigServerIntegrationTest {
     @Container
     static GenericContainer<?> configServer = new GenericContainer<>(IMAGE_NAME)
             .withExposedPorts(8888)
-            .waitingFor(Wait.forHttp("/actuator/health").forStatusCode(200));
+            .waitingFor(
+                    Wait.forHttp("/actuator/health")
+                            .forStatusCode(200)
+                            .withStartupTimeout(Duration.ofMinutes(2))
+            );
 
     @BeforeAll
     static void setUp() {
