@@ -12,7 +12,6 @@ jobs:
     with:
       run_integration_tests: false
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPORTS_TRIGGER_TOKEN: ${{ secrets.REPORTS_TRIGGER_TOKEN }}
       OWASP_API_KEY: ${{ secrets.OWASP_API_KEY }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
