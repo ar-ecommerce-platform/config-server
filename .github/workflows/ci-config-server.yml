@@ -8,7 +8,7 @@ on:
 
 jobs:
   call-reusable-ci:
-    uses: ar-ecommerce-platform/ci-workflows/.github/workflows/ci-template.yml@main
+    uses: ar-ecommerce-platform/ci-workflows/.github/workflows/ci-template.yml@dev
     with:
       run_integration_test: false
     secrets:
