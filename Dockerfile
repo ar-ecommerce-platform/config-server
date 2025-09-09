@@ -21,6 +21,9 @@ RUN ./gradlew build -x test --no-daemon
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
+# Install curl (for health checks and debug)
+RUN apk add --no-cache curl
+
 # Copy only the jar from build stage
 COPY --from=build /app/build/libs/*.jar app.jar
 
