@@ -8,8 +8,7 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 @EnableConfigServer
 public class EcommerceConfigServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EcommerceConfigServerApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(EcommerceConfigServerApplication.class, args);
+  }
 }
