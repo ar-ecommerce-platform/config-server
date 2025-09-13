@@ -13,7 +13,6 @@ jacoco {
     toolVersion = "0.8.13"
 }
 
-
 // Apply the shared build-quality script from the ci-workflows repo
 apply from: "https://raw.githubusercontent.com/ar-ecommerce-platform/ci-workflows/dev/gradle/build-quality.gradle"
 
