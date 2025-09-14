@@ -15,6 +15,7 @@ jobs:
       REPORTS_TRIGGER_TOKEN: ${{ secrets.REPORTS_TRIGGER_TOKEN }}
       OWASP_API_KEY: ${{ secrets.OWASP_API_KEY }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     permissions:
       contents: read
       packages: write
