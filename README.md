@@ -1,9 +1,9 @@
 # 🛠️ Config Server – E-commerce Backend
 
 [![CI Status](https://github.com/ar-ecommerce-platform/config-server/actions/workflows/ci-config-server.yml/badge.svg)](https://github.com/ar-ecommerce-platform/config-server/actions/workflows/ci-config-server.yml)
-[![View Test Report](https://img.shields.io/badge/Test_Report-Live-blue?style=flat-square)](https://ar-ecommerce-platform.github.io/test-repo/config-server/test/)
-[![View Coverage Report](https://img.shields.io/badge/Coverage_Report-Live-green?style=flat-square)](https://ar-ecommerce-platform.github.io/test-repo/config-server/coverage/)
-[![View Security Report](https://img.shields.io/badge/Security_Report-Live-red?style=flat-square)](https://ar-ecommerce-platform.github.io/test-repo/config-server/security/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ar-ecommerce-platform_config-server&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ar-ecommerce-platform_config-server)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ar-ecommerce-platform_config-server&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ar-ecommerce-platform_config-server)
+[![Snyk](https://snyk.io/test/github/ar-ecommerce-platform/config-server/badge.svg)](https://snyk.io/test/github/ar-ecommerce-platform/config-server)
 
 
 Centralized configuration service for all microservices in the E-commerce backend. Fetches and distributes configuration properties from a remote Git repository.
