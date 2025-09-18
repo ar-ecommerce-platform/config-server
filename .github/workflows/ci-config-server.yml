@@ -17,5 +17,5 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     permissions:
-      contents: read
+      contents: write
       packages: write
