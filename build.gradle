@@ -86,6 +86,13 @@ configurations.configureEach {
                 details.useVersion '7.3.0.202506031305-r'
                 details.because 'Fix CVE-2025-4949'
             }
+            // CVE-2025-41249 ( Spring Framework)
+            if (details.requested.group == 'org.springframework') {
+                if (['spring-core','spring-beans','spring-context'].contains(details.requested.name)) {
+                    details.useVersion '6.2.11'
+                    details.because 'Fix CVE-2025-41249'
+                }
+            }
         }
 	}
 }
