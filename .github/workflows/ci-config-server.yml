@@ -16,6 +16,7 @@ jobs:
       OWASP_API_KEY: ${{ secrets.OWASP_API_KEY }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     permissions:
-      contents: read
+      contents: write
       packages: write
