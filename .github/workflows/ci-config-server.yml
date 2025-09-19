@@ -21,6 +21,3 @@ jobs:
       docker_release_status: "success"
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    env:
-      # Fake a start time 90 seconds ago for duration calc
-      START_TIME: $(( $(date +%s) - 90 ))
