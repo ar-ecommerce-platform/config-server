@@ -7,18 +7,20 @@ on:
     branches: [main, develop, test-notify-slack]
 
 jobs:
-  call-reusable-ci:
-    uses: ar-ecommerce-platform/ci-workflows/.github/workflows/ci-template.yml@dev
+  test-notify-slack:
+    uses: ar-ecommerce-platform/ci-workflows/.github/workflows/notify-slack.yml@dev
     with:
-      run_integration_tests: false
-      run_quality_scan: false
-      run_security_scan: false
+      service_name: "config-server"
+      image_sha: "ghcr.io/ar-ecommerce-platform/config-server:ci"
+      setup_status: "success"
+      code_quality_status: "skipped"
+      security_scan_status: "skipped"
+      unit_tests_status: "skipped"
+      integration_tests_status: "skipped"
+      quality_scan_status: "skipped"
+      docker_release_status: "success"
     secrets:
-      REPORTS_TRIGGER_TOKEN: ${{ secrets.REPORTS_TRIGGER_TOKEN }}
-      OWASP_API_KEY: ${{ secrets.OWASP_API_KEY }}
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    permissions:
-      contents: write
-      packages: write
+    env:
+      # Fake a start time 90 seconds ago for duration calc
+      START_TIME: $(( $(date +%s) - 90 ))
