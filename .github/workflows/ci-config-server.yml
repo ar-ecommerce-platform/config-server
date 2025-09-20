@@ -1,5 +1,5 @@
 name: Config Server CI
-# v0.0.1
+# Test
 on:
   push:
     branches: [main, develop]
