@@ -1,5 +1,5 @@
 name: Config Server CI
-
+# v0.0.1
 on:
   push:
     branches: [main, develop]
@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 jobs:
-  call-reusable-ci:
+  call-ci-template:
     uses: ar-ecommerce-platform/ci-workflows/.github/workflows/ci-template.yml@dev
     with:
       run_integration_tests: false
