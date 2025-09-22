@@ -1,10 +1,10 @@
 name: Config Server CI
-# Test
+# Test Ref
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, test-docker-release]
   pull_request:
-    branches: [main, develop]
+    branches: [main, develop, test-docker-release]
 
 jobs:
   call-ci-template:
