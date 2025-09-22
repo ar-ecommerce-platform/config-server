@@ -1,5 +1,5 @@
 name: Config Server CI
-
+# Test success()
 on:
   push:
     branches: [main, develop, test-docker-release]
