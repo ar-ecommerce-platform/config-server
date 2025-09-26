@@ -1,5 +1,4 @@
 name: Config Server CI
-#Test Docker Release Workflow
 
 on:
   push:
