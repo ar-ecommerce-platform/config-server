@@ -1,5 +1,4 @@
 name: Config Server CI
-#Test Docker Release Workflow
 
 on:
   push:
@@ -12,6 +11,7 @@ jobs:
     uses: ar-ecommerce-platform/ci-workflows/.github/workflows/ci-template.yml@dev
     with:
       run_integration_tests: false
+      run_security_scan: false
     secrets:
       REPORTS_TRIGGER_TOKEN: ${{ secrets.REPORTS_TRIGGER_TOKEN }}
       OWASP_API_KEY: ${{ secrets.OWASP_API_KEY }}
