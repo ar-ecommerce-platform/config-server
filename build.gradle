@@ -14,7 +14,7 @@ jacoco {
 }
 
 // Apply the shared build-quality script from the ci-workflows repo
-apply from: "https://raw.githubusercontent.com/ar-ecommerce-platform/ci-workflows/dev/gradle/build-quality.gradle"
+apply from: "https://raw.githubusercontent.com/ar-ecommerce-platform/ci-workflows/test-checkstyle/gradle/build-quality.gradle"
 
 group = 'com.ecommerce'
 version = '0.0.1-SNAPSHOT'
