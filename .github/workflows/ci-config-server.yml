@@ -1,5 +1,5 @@
 name: Config Server CI
-#Testing Checkstyle
+# Testing Checkstyle
 
 on:
   push:
