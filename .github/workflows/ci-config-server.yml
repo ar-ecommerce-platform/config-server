@@ -1,5 +1,4 @@
 name: Config Server CI
-# Testing Checkstyle
 
 on:
   push:
@@ -11,10 +10,7 @@ jobs:
   call-ci-template:
     uses: ar-ecommerce-platform/ci-workflows/.github/workflows/ci-template.yml@test-checkstyle
     with:
-      run_unit_tests: false
       run_integration_tests: false
-      run_quality_scan: false
-      run_security_scan: false
     secrets:
       PAT_REPORTS_TOKEN: ${{ secrets.PAT_REPORTS_TOKEN }}
       OWASP_API_KEY: ${{ secrets.OWASP_API_KEY }}
