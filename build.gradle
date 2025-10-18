@@ -93,6 +93,12 @@ configurations.configureEach {
                     details.because 'Fix CVE-2025-41249'
                 }
             }
+
+            // CVE-2025-11226 (logback-core < 1.5.19)
+            if (details.requested.group == 'ch.qos.logback') {
+                details.useVersion '1.5.19'
+                details.because 'Fix CVE-2025-11226'
+            }
         }
 	}
 }
