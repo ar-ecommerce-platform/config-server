@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerce_config_server;
+package com.ecommerce.configserver;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
