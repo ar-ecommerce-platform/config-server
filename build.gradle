@@ -14,7 +14,7 @@ jacoco {
 }
 
 // Apply the shared build-quality script from the ci-workflows repo
-apply from: "https://raw.githubusercontent.com/ar-ecommerce-platform/ci-workflows/dev/gradle/build-quality.gradle"
+apply from: "https://raw.githubusercontent.com/ar-ecommerce-platform/ci-workflows/test-checkstyle/gradle/build-quality.gradle"
 
 group = 'com.ecommerce'
 version = '0.0.1-SNAPSHOT'
@@ -92,6 +92,12 @@ configurations.configureEach {
                     details.useVersion '6.2.11'
                     details.because 'Fix CVE-2025-41249'
                 }
+            }
+
+            // CVE-2025-11226 (logback-core < 1.5.19)
+            if (details.requested.group == 'ch.qos.logback') {
+                details.useVersion '1.5.19'
+                details.because 'Fix CVE-2025-11226'
             }
         }
 	}
