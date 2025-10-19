@@ -9,7 +9,6 @@ on:
 
 jobs:
   call-ci-template:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: ar-ecommerce-platform/ci-workflows/.github/workflows/ci-template.yml@test-checkstyle
     with:
       run_integration_tests: false
