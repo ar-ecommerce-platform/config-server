@@ -2,9 +2,10 @@ name: Config Server CI
 # Testing
 
 on:
-  workflow_run:
-    workflows: ["Linting", "Dependency Review"]
-    types: [completed]
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
   call-ci-template:
