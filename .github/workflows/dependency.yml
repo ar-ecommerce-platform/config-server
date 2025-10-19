@@ -8,4 +8,4 @@ on:
 
 jobs:
   call-dependency-review:
-    uses: ar-ecommerce-platform/.github/.github/workflows/dependency-review-template.yml@main
+    uses: ar-ecommerce-platform/.github/.github/workflows/dependency-review.yml@main
