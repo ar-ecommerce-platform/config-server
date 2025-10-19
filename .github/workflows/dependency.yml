@@ -1,5 +1,4 @@
 name: Dependency Review
-
 on:
   push:
     branches: [main, develop]
