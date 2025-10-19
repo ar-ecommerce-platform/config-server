@@ -7,4 +7,4 @@ on:
 
 jobs:
   call-lint:
-    uses: ar-ecommerce-platform/.github/.github/workflows/lint.yml@main
+    uses: ar-ecommerce-platform/.github/workflows/lint.yml@main
