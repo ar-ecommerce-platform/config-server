@@ -49,6 +49,10 @@ docker run --rm -p 8888:8888 -v "$(pwd)/../config-repo:/config-repo:ro" \
 
 Quality config is vendored: `gradle/quality.gradle`, `config/checkstyle/`.
 
+## Testing
+
+- **Smoke** — `EcommerceConfigServerApplicationTests` boots the context against the `native` backend using a classpath config fixture, with Eureka disabled.
+
 ## Config
 
 | Variable | Default | Purpose |
