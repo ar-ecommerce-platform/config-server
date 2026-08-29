@@ -1,34 +1,21 @@
-# -------------------------
-# 1. Build stage
-# -------------------------
+# syntax=docker/dockerfile:1
+# ---------- build stage ----------
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Copy Gradle wrapper and build files first (better caching)
+# Wrapper + build scripts first for better layer caching.
 COPY gradlew .
 COPY gradle gradle
-COPY build.gradle settings.gradle ./
-
-# Copy only source code
+COPY config config
+COPY build.gradle settings.gradle gradle.properties ./
 COPY src ./src
 
-# Build the jar (skip tests, since they run in CI separately)
-RUN ./gradlew build -x test --no-daemon
+RUN ./gradlew bootJar --no-daemon
 
-# -------------------------
-# 2. Runtime stage
-# -------------------------
+# ---------- runtime stage ----------
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-
-# Install curl (for health checks and debug)
 RUN apk add --no-cache curl
-
-# Copy only the jar from build stage
 COPY --from=build /app/build/libs/*.jar app.jar
-
-# Expose service port
 EXPOSE 8888
-
-# Run the app
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -2,7 +2,6 @@ HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
-gradle.properties
 
 ### IntelliJ IDEA ###
 .idea
@@ -12,3 +11,13 @@ gradle.properties
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+# --- secrets: never commit ---
+.env
+*.env
+!*.env.example
+application-local.yml
+application-local.properties
+*.pem
+*.key
+*.p12
+src/main/resources/keys/

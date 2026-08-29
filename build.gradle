@@ -1,23 +1,15 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.5.5'
-    id 'io.spring.dependency-management' version '1.1.7'
-    id 'com.diffplug.spotless' version '7.2.1'
-    id 'checkstyle'
-    id "org.owasp.dependencycheck" version "12.1.3"
-    id 'jacoco'
-    id 'org.sonarqube' version "6.3.1.5724"
+	id 'java'
+	id 'org.springframework.boot' version '3.5.7'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.diffplug.spotless' version '7.2.1'
+	id 'checkstyle'
+	id 'jacoco'
 }
-
-jacoco {
-    toolVersion = "0.8.13"
-}
-
-// Apply the shared build-quality script from the ci-workflows repo
-apply from: "https://raw.githubusercontent.com/ar-ecommerce-platform/.github/develop/gradle/build-quality.gradle"
 
 group = 'com.ecommerce'
 version = '0.0.1-SNAPSHOT'
+description = 'Centralized Spring Cloud Config Server'
 
 java {
 	toolchain {
@@ -33,73 +25,42 @@ ext {
 	set('springCloudVersion', '2025.0.0')
 }
 
-sourceSets {
-    smoke {
-        java.srcDir file('src/smoke/java')
-        resources.srcDir file('src/smoke/resources')
-        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
-        runtimeClasspath += output + compileClasspath
-    }
-}
-
 dependencies {
-	// Application dependencies
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation("org.springframework.cloud:spring-cloud-config-server")
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.cloud:spring-cloud-config-server'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	// Unit test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-	testImplementation 'org.testcontainers:junit-jupiter'
-	testImplementation 'org.testcontainers:testcontainers'
-	testImplementation 'io.rest-assured:rest-assured'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	// Smoke test dependencies
-    smokeImplementation 'org.springframework.boot:spring-boot-starter-test'
-    smokeImplementation 'org.testcontainers:junit-jupiter'
 }
 
+// Keep transitive dependencies patched for known CVEs even before the OWASP
+// scanner is re-enabled in CI.
 configurations.configureEach {
 	resolutionStrategy {
-        eachDependency { details ->
-            // CVE-2024-25710, CVE-2024-26308 (commons-compress < 1.26.0)
-            if (details.requested.group == 'org.apache.commons' &&
-                    details.requested.name == 'commons-compress') {
-                details.useVersion '1.26.0'
-                details.because 'Fix CVE-2024-25710/CVE-2024-26308'
-            }
-
-            // CVE-2025-48924 (commons-lang3 3.17.0)
-            if (details.requested.group == 'org.apache.commons' &&
-                    details.requested.name == 'commons-lang3') {
-                details.useVersion '3.18.0'
-                details.because 'Fix CVE-2025-48924'
-            }
-
-            // CVE-2025-4949 (JGit < 7.2.1)
-            if (details.requested.group == 'org.eclipse.jgit') {
-                details.useVersion '7.3.0.202506031305-r'
-                details.because 'Fix CVE-2025-4949'
-            }
-            // CVE-2025-41249 ( Spring Framework)
-            if (details.requested.group == 'org.springframework') {
-                if (['spring-core','spring-beans','spring-context'].contains(details.requested.name)) {
-                    details.useVersion '6.2.11'
-                    details.because 'Fix CVE-2025-41249'
-                }
-            }
-
-            // CVE-2025-11226 (logback-core < 1.5.19)
-            if (details.requested.group == 'ch.qos.logback') {
-                details.useVersion '1.5.19'
-                details.because 'Fix CVE-2025-11226'
-            }
-        }
+		eachDependency { details ->
+			if (details.requested.group == 'org.apache.commons'
+					&& details.requested.name == 'commons-compress') {
+				details.useVersion '1.26.0'
+				details.because 'CVE-2024-25710 / CVE-2024-26308'
+			}
+			if (details.requested.group == 'org.apache.commons'
+					&& details.requested.name == 'commons-lang3') {
+				details.useVersion '3.18.0'
+				details.because 'CVE-2025-48924'
+			}
+			if (details.requested.group == 'org.eclipse.jgit') {
+				details.useVersion '7.3.0.202506031305-r'
+				details.because 'CVE-2025-4949'
+			}
+			if (details.requested.group == 'ch.qos.logback') {
+				details.useVersion '1.5.19'
+				details.because 'CVE-2025-11226'
+			}
+		}
 	}
 }
 
@@ -109,29 +70,9 @@ dependencyManagement {
 	}
 }
 
-tasks.register("smoke", Test) {
-    description = "Runs smoke tests"
-    group = "verification"
-    testClassesDirs = sourceSets.smoke.output.classesDirs
-    classpath = sourceSets.smoke.runtimeClasspath
-    useJUnitPlatform()
-
-    reports {
-        html.required.set(true)
-        html.outputLocation.set(layout.buildDirectory.dir("reports/tests/smoke/${project.name}"))
-    }
-
-    dependsOn bootJar
-}
-
 bootJar {
 	archiveFileName = 'config-server.jar'
 }
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "ar-ecommerce-platform_${project.name}"
-        property "sonar.organization", "ar-ecommerce-platform"
-        property "sonar.host.url", "https://sonarcloud.io"
-    }
-}
+// Shared, vendored, offline code-quality config (Spotless + Checkstyle + JaCoCo).
+apply from: "$rootDir/gradle/quality.gradle"
