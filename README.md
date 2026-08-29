@@ -1,137 +1,64 @@
-# 🛠️ Config Server – E-commerce Backend
+# config-server
 
-[![CI Status](https://github.com/ar-ecommerce-platform/config-server/actions/workflows/ci-config-server.yml/badge.svg)](https://github.com/ar-ecommerce-platform/config-server/actions/workflows/ci-config-server.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ar-ecommerce-platform_config-server&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ar-ecommerce-platform_config-server)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ar-ecommerce-platform_config-server&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ar-ecommerce-platform_config-server)
-[![Snyk](https://snyk.io/test/github/ar-ecommerce-platform/config-server/badge.svg)](https://snyk.io/test/github/ar-ecommerce-platform/config-server)
+Spring Cloud Config Server for the [ar-ecommerce-platform](https://github.com/ar-ecommerce-platform).
+Serves per-service configuration from the [`config-repo`](https://github.com/ar-ecommerce-platform/config-repo).
 
+- **Port:** 8888
+- **Backend:** `native` — reads a local directory (the sibling `config-repo` checkout locally,
+  a mounted volume in Docker). Not the Git backend; `CONFIG_REPO_LOCATIONS` overrides the path.
+- **Registers with:** Eureka (discovery-server :8761)
+- Not load-bearing for the platform — every service also ships a self-contained `application.yml`
+  and imports from here as `optional:`.
 
-Centralized configuration service for all microservices in the E-commerce backend. Fetches and distributes configuration properties from a remote Git repository.
+## Endpoints
 
----
+Standard Spring Cloud Config Server API:
 
-## 🔧 Tech Stack
+| Path | Returns |
+|---|---|
+| `GET /{application}/{profile}` | resolved properties for a service + profile |
+| `GET /{application}-{profile}.yml` | same, as YAML |
+| `GET /actuator/health` | health |
 
-- **Java**
-- **Spring Boot**
-- **Spring Cloud Config Server**
-- **Git (Remote Config Repo)**
-- **Docker**
+Example: `curl http://localhost:8888/auth-service/default`
 
----
+## Run
 
-## 🚀 Features
+Whole platform (recommended):
 
-- 📦 Centralized and externalized configuration for all microservices
-- 📂 Supports multiple environments (`dev`, `prod`, etc.)
-- 🔄 Dynamic reload (Spring Cloud Bus support on client-side)
-- 🔐 Separation of sensitive values from application code
-- 🌐 Git-backed storage for version-controlled configuration
-
----
-
-## 🧱 Architecture Overview
-
-The Config Server reads configuration files from a centralized Git repository and exposes them to all microservices at runtime. This allows consistent configuration management across environments.
-
-📁 Config Repository: https://github.com/ar-ecommerce-platform/config-repo
-
-🔗 Config access URL pattern:  
-`http://localhost:8888/{application}/{profile}`
-
-All services are configured to use this server via:
-```yaml
-spring:
-  config:
-    import: configserver:http://localhost:8888
+```bash
+docker compose -f ../infra/compose/docker-compose.yml up -d --build
 ```
 
----
+This service alone (resolves `../config-repo`):
 
-## 🧾 Example: Microservice application.yml
-To connect your service to the Config Server, add the following to your application.yml:
-
-```yaml
-spring:
-  application:
-    name: inventory-service-dev   # This must match the config file name in the config repo
-config:
-  import: configserver:http://localhost:8888    # Tells Spring to fetch config from the Config Server
-```
-📝 Make sure your Config Server is running and points to the correct Git repo!
-
----
-
-## 📁 Directory Structure
-
-```
-config-server/
-├── src/
-│   ├── main/
-│   │   ├── java/com/ecommerce/ecommerce_config_server/
-│   │   │   └── EcommerceConfigServerApplication.java      # Main Spring Boot app
-│   │   └── resources/
-│   │       ├── application.yml                            # Optional default Spring Boot properties
-│   │       └── bootstrap.yml                              # Config Server bootstrap properties
-│   ├── smoke/
-│   │   └── java/com/ecommerce/ecommerce_config_server/
-│   │       └── ConfigServerSmokeTest.java                # Smoke test for Config Server
-│   └── test/
-│       ├── java/com/ecommerce/ecommerce_config_server/
-│       │   └── EcommerceConfigServerApplicationTests.java  # Unit & context load tests
-│       └── resources/
-│           ├── application-test.yml                       # Test profile config (Spring Boot 3 format)
-│           └── config-repo/
-│               └── application.yml                        # Local test repo content served by Config Server
-├── build.gradle
-├── Dockerfile
-├── .github/
-│   └── workflows/
-│       └── ci-config-server.yml                           # CI workflow for Config Server
+```bash
+./gradlew bootRun
+# or
+docker build -t ecom/config-server .
+docker run --rm -p 8888:8888 -v "$(pwd)/../config-repo:/config-repo:ro" \
+  -e CONFIG_REPO_LOCATIONS='file:/config-repo,file:/config-repo/{application}' ecom/config-server
 ```
 
----
+## Build & quality
 
-## ⚙️ Configuration
-
-The server pulls all config files from a remote Git repository using the following setup:
-
-```yaml
-spring:
-  cloud:
-    config:
-      server:
-        git:
-          uri: https://github.com/ar-ecommerce-platform/config-repo
+```bash
+./gradlew build          # compile + test + spotless + checkstyle (cyclomatic complexity <= 10) + jacoco report
+./gradlew spotlessApply
 ```
 
----
+Quality config is vendored: `gradle/quality.gradle`, `config/checkstyle/`.
 
+## Config
 
-## 🧪 Testing Strategy
+| Variable | Default | Purpose |
+|---|---|---|
+| `SERVER_PORT` | `8888` | HTTP port |
+| `CONFIG_REPO_LOCATIONS` | `file:../config-repo,file:../config-repo/{application}` | native search locations |
+| `EUREKA_CLIENT_SERVICEURL_DEFAULTZONE` | `http://localhost:8761/eureka/` | registry URL |
 
-The `config-server` is validated with **smoke tests** to ensure reliable startup and connectivity.
+## Tech
 
-### ✅ What We're Testing
-- **Service Boot & Health** – Verifies the config server starts up and reports healthy status.
-- **Git Integration** – Confirms that configs are pulled correctly from the remote Git repository.
-- **Profile-Specific Resolution** – Checks that services receive the correct environment configs (e.g., `dev`, `prod`).
-- **Fallback Behavior** – Ensures graceful responses for unknown profiles or services using global defaults.
+Java 21 · Spring Boot 3.5.7 · Spring Cloud 2025.0.0 (`config-server`, `netflix-eureka-client`) · Gradle
 
-### 🧠 Why This Matters
-In production, configuration servers are a critical part of system startup. If they fail, services may boot with incorrect or missing properties. These tests simulate realistic interactions and edge cases to guarantee stability under normal and degraded conditions.
-
-### ⚙️ How It's Done
-- Uses **Testcontainers** to spin up a real Docker container of the config server.
-- Sends real HTTP requests (via RestAssured) to endpoints like `/auth-service/dev`.
-- Validates:
-  - That correct YAML files are resolved and merged.
-  - That the `/actuator/health` endpoint reports `UP` (smoke test).
-  - That default and global fallbacks are applied as expected.
----
-
-## 🔗 Main Project Page
-
-For the main E-commerce backend platform repository and all related projects, visit:
-
-https://github.com/ar-ecommerce-platform
+See [infra/RUNBOOK.md](../infra/RUNBOOK.md) for the full platform runbook.
