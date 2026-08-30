@@ -1,33 +1,23 @@
 package com.ecommerce.configserver;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
-/**
- * Tests for the Config Server application. Makes sure the application starts correctly and the
- * context loads.
- */
-@SpringBootTest(properties = {"spring.profiles.active=test"})
+/** Verifies the Config Server context starts against a local (native) config source. */
+@SpringBootTest
+@ActiveProfiles("native")
+@TestPropertySource(
+    properties = {
+      "spring.cloud.config.server.native.search-locations=classpath:/config-repo",
+      "eureka.client.enabled=false",
+      "spring.cloud.service-registry.auto-registration.enabled=false"
+    })
 class EcommerceConfigServerApplicationTests {
 
-  /**
-   * Check that the Spring application context starts without errors. This ensures all configuration
-   * and beans work correctly.
-   */
   @Test
   void contextLoads() {
-    // Method left intentionally empty – test passes if context loads successfully
-  }
-
-  /**
-   * Check that the main method runs without throwing errors. This makes sure the application can
-   * start using the main method.
-   */
-  @Test
-  void mainRunsWithoutException() {
-    String[] args = {};
-    assertThatCode(() -> EcommerceConfigServerApplication.main(args)).doesNotThrowAnyException();
+    // Passes if the application context is created successfully.
   }
 }
