@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # ---------- build stage ----------
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM eclipse-temurin:25-jdk-alpine AS build
 WORKDIR /app
 
 # Wrapper + build scripts first for better layer caching.
@@ -13,7 +13,7 @@ COPY src ./src
 RUN ./gradlew bootJar --no-daemon
 
 # ---------- runtime stage ----------
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
 RUN apk add --no-cache curl && addgroup -S app && adduser -S -G app app
 COPY --from=build /app/build/libs/*.jar app.jar
