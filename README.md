@@ -1,7 +1,7 @@
 # config-server
 
-Spring Cloud Config Server for the [ar-ecommerce-platform](https://github.com/ar-ecommerce-platform).
-Serves per-service configuration from the [`config-repo`](https://github.com/ar-ecommerce-platform/config-repo).
+Spring Cloud Config Server for the [ar-ecommerce-backend](https://github.com/ar-ecommerce-backend).
+Serves per-service configuration from the [`config-repo`](https://github.com/ar-ecommerce-backend/config-repo).
 
 - **Port:** 8888
 - **Backend:** `native` — reads a local directory (the sibling `config-repo` checkout locally,
